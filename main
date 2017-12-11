@@ -1,0 +1,53 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<ctime>
+
+using namespace std;
+
+
+int main() 
+{
+	clock_t start = clock();
+	string line, aa;
+	int sayac = 0;
+	ifstream infile("access_log.txt");
+	if (infile.is_open())
+	{
+		
+		
+		
+
+
+
+		while (getline(infile, line)) {
+			unsigned first = line.find("GET ");
+			unsigned last = line.find(" HTTP");
+			string strNew = line.substr(first+4,last-first-4);
+
+			cout << strNew << endl;
+
+		}
+
+
+		infile.close();
+	}
+	else
+		cout << " unable to möhöhö" << endl;
+	
+
+
+
+	clock_t end = clock();
+	double time = (double)(end - start) / CLOCKS_PER_SEC;
+	cout << "Toplam Satır: " << sayac << endl;
+	cout <<" gecen zaman : " << time << " saniye" <<  endl;
+	cin >> aa;
+	return 0;
+
+
+
+
+
+
+}
