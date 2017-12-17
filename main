@@ -1,53 +1,281 @@
-#include<iostream>
-#include<fstream>
-#include<string>
-#include<ctime>
-
-using namespace std;
+//C++ Program to Implement Hash Tables
 
 
-int main() 
+#include "stdafx.h"
+
+int biggest[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+string biggestName[10];
+
+const int TABLE_SIZE = 32767;
+
+struct values
 {
-	clock_t start = clock();
-	string line, aa;
-	int sayac = 0;
-	ifstream infile("access_log.txt");
-	if (infile.is_open())
+	string value;
+	int counter;
+};
+
+
+// HashEntry Class Declaration
+
+class HashEntry
+{
+public:
+	values * VL = new values;
+	HashEntry(string value, int counter)
 	{
-		
-		
-		
+		VL->value = value;
+		VL->counter = counter;
+	}
+};
 
+// HashMap Class Declaration
+class HashMap
+{
+private:
+	HashEntry * *table;
+public:
 
+	HashMap()
+	{
+		table = new HashEntry *[TABLE_SIZE];
 
-		while (getline(infile, line)) {
-			unsigned first = line.find("GET ");
-			unsigned last = line.find(" HTTP");
-			string strNew = line.substr(first+4,last-first-4);
-
-			cout << strNew << endl;
-
+		for (int i = 0; i < TABLE_SIZE; i++)
+		{
+			table[i] = new HashEntry("", 0);
 		}
 
-
-		infile.close();
 	}
-	else
-		cout << " unable to möhöhö" << endl;
-	
+
+
+	void Loop(string ourValue)
+	{
+		int hash = 0;
+		while (table[hash]->VL->value != "" && table[hash]->VL->value != ourValue)
+		{
+			hash++;
+		}
+
+		/*
+		if (hash == 40)
+		{
+		for (int i = 0; i < 100; i++)
+		{
+		cout << i << ": " << table[i]->VL->value << " - " << table[i]->VL->counter << endl;
+		}
+		}
+		*/
+
+		if (table[hash]->VL->value == "")
+		{
+			table[hash] = new HashEntry(ourValue, 1);
+			// cout << hash << ". value: " << table[hash]->VL->value << endl;   // 43. valueda durdu(çözüldü)
+		}
+		else
+		{
+			table[hash]->VL->counter += 1;
+			//cout << "counter of " << table[hash]->VL->value << " become: " << table[hash]->VL->counter << endl;
+		}
+
+	}
+
+
+	void chechk()
+	{
+
+
+		int i = 0;
+		int x;
+		string y;
+
+		while (table[i]->VL->value != "" && i != TABLE_SIZE)
+		{
+
+			x = table[i]->VL->counter;
+			y = table[i]->VL->value;
+
+			if (x > biggest[0])
+			{
+				if (x > biggest[1])
+				{
+					if (x > biggest[2])
+					{
+						if (x > biggest[3])
+						{
+							if (x > biggest[4])
+							{
+								if (x > biggest[5])
+								{
+									if (x > biggest[6])
+									{
+										if (x > biggest[7])
+										{
+											if (x > biggest[8])
+											{
+												if (x > biggest[9])
+												{
+													switcher(9);
+													biggest[9] = x;
+													biggestName[9] = y;
+												}
+												else
+												{
+													switcher(8);
+													biggest[8] = x;
+													biggestName[8] = y;
+												}
+
+											}
+											else
+											{
+												switcher(7);
+												biggest[7] = x;
+												biggestName[7] = y;
+											}
+										}
+										else
+										{
+											switcher(6);
+											biggest[6] = x;
+											biggestName[6] = y;
+										}
+									}
+									else
+									{
+										switcher(5);
+										biggest[5] = x;
+										biggestName[5] = y;
+									}
+								}
+								else
+								{
+									switcher(4);
+									biggest[4] = x;
+									biggestName[4] = y;
+								}
+							}
+							else
+							{
+								switcher(3);
+								biggest[3] = x;
+								biggestName[3] = y;
+							}
+						}
+						else
+						{
+							switcher(2);
+							biggest[2] = x;
+							biggestName[2] = y;
+						}
+					}
+					else
+					{
+						switcher(1);
+						biggest[1] = x;
+						biggestName[1] = y;
+					}
+				}
+				else
+				{
+
+					biggest[0] = x;
+				}
+			}
+
+			i++;
+		}
+
+		for (int k = 0; k < 10; k++)
+		{
+			cout << biggestName[k] << " : " << biggest[k] << endl;
+		}
+
+	}
+
+	void switcher(int kola)
+	{
+		for (int i = 0; i < kola; i++)
+		{
+			biggestName[i] = biggestName[i + 1];
+			biggest[i] = biggest[i + 1];
+		}
+	}
 
 
 
-	clock_t end = clock();
-	double time = (double)(end - start) / CLOCKS_PER_SEC;
-	cout << "Toplam Satır: " << sayac << endl;
-	cout <<" gecen zaman : " << time << " saniye" <<  endl;
-	cin >> aa;
+};
+
+// Main Contains Menu
+
+int main()
+{
+
+
+
+	HashMap hash;
+	int choice = 0;
+	string line = "";
+
+	while (1)
+	{
+		cout << "\n----------------------" << endl;
+		cout << "Operations on Hash Table" << endl;
+		cout << "----------------------" << endl;
+		cout << "3.Put txt file data inside of table" << endl;
+		cout << "4.Exit" << endl;
+		cout << "Enter your choice: ";
+		cin >> choice;
+		cout << endl;
+
+		switch (choice)
+		{
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+		{
+
+			clock_t start = clock();
+
+			ifstream infile("access_log.txt");
+
+			if (infile.is_open())
+			{
+				while (getline(infile, line))
+				{
+					/*unsigned last = line.find(" HTTP");
+					string strNew = line.substr(44, last - 44);
+					*/
+
+					unsigned first = line.find("GET ");
+					unsigned last = line.find(" HTTP");
+					string strNew = line.substr(first + 4, last - first - 4);
+
+					hash.Loop(strNew);
+				}
+				infile.close();
+
+				hash.chechk();
+
+				clock_t end = clock();
+				double time = (double)(end - start) / CLOCKS_PER_SEC;
+				cout << " gecen zaman : " << time << " saniye" << endl;
+			}
+			else
+				cout << " unable to open" << endl;
+
+			break;
+		}
+		case 4:
+			exit(1);
+		default:
+			cout << "\nEnter correct option\n";
+		}
+	}
+
+	cout << "success" << endl;
+
 	return 0;
-
-
-
-
-
-
 }
