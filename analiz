@@ -1,0 +1,495 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<ctime>
+#include <cstdlib> // for exiting
+
+
+using namespace std;
+
+static int table[256];
+
+char alphanum[] =
+"0123456789"
+"!?.,"
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz";
+
+int stringLength = sizeof(alphanum) - 1;
+
+double totalTime = 0;
+int totalOperation = 0;
+
+double totalTime1 = 0;
+int totalOperation1 = 0;
+
+void BruteForceSearch()
+{
+	int sayac = 0;
+	int i;
+	int j;
+	int k = 0;
+
+	string pattern;
+	string text;
+
+	cout << "Write the pattern: ";
+	cin >> pattern;
+
+	const auto start = clock();
+
+	ifstream txt("the_truman_show_script.txt");
+	
+	if (txt.is_open()) {
+
+		while (getline(txt, text))
+		{
+			int length = text.length();
+			for (i = 0; i < length; i++) {
+				if (text[i] >= 'A' && text[i] <= 'Z')
+				{
+					text[i] += 32;
+				}
+			}
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			for (i = 0; i <= lengthOfText - lengthOfPattern; i++)
+			{
+				for (j = 0; j < lengthOfPattern; j++)
+				{
+					sayac++;
+					if (text[i + j] != pattern[j])
+					{
+						break;
+					}
+				}
+				if (j == lengthOfPattern) {
+					k++;
+				}
+			}
+		}
+	}
+
+	const auto end = clock();
+
+	cout << "\n" << pattern << " found " << k << " times" << endl;
+
+	cout << "\nNumber of Basic Operation is : " << sayac << endl;
+
+	cout << "\nTime for Brute-Force String Matching Algorithm: " << (end - start) * 1000 / CLOCKS_PER_SEC << " ms" << endl << endl;
+}
+
+void BruteForceSearchWithString(string pattern)
+{
+	int sayac = 0;
+	int i;
+	int j;
+	int k = 0;
+
+	string text;
+	
+	const auto start = clock();
+
+	ifstream txt("the_truman_show_script.txt");
+
+	if (txt.is_open()) {
+
+		while (getline(txt, text))
+		{
+			int length = text.length();
+			for (i = 0; i < length; i++) {
+				if (text[i] >= 'A' && text[i] <= 'Z')
+				{
+					text[i] += 32;
+				}
+			}
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			for (i = 0; i <= lengthOfText - lengthOfPattern; i++)
+			{
+				for (j = 0; j < lengthOfPattern; j++)
+				{
+					sayac++;
+					if (text[i + j] != pattern[j])
+					{
+						break;
+					}
+				}
+				if (j == lengthOfPattern) {
+					k++;
+				}
+			}
+		}
+	}
+
+	const auto end = clock();
+
+	cout << "\n" << pattern << " found " << k << " times" << endl;
+
+	cout << "\nNumber of Basic Operation is : " << sayac << endl;
+
+	cout << "\nTime for Brute-Force String Matching Algorithm: " << (end - start) * 1000 / CLOCKS_PER_SEC << " ms" << endl << endl;
+}
+
+void BruteForceSearchForRandom(string Str)
+{
+
+	int sayac = 0, i, j;
+
+	string pattern = Str;
+	string text;
+
+	ifstream txt("the_truman_show_script.txt");
+
+	if (txt.is_open()) {
+
+		const auto start = clock();
+
+		while (getline(txt, text))
+		{
+			int length = text.length();
+
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			for (i = 0; i <= lengthOfText - lengthOfPattern; i++)
+			{
+				for (j = 0; j < lengthOfPattern; j++)
+				{
+					sayac++;
+					if (text[i + j] != pattern[j])
+					{
+						break;
+					}
+				}
+
+			}
+
+			
+		}
+
+		const auto end = clock();
+		totalOperation = totalOperation + sayac;
+		totalTime = totalTime + ((end - start) * 1000.0 / CLOCKS_PER_SEC);
+
+	}
+	
+}
+
+void ShiftTable(string pattern) {
+	int lengthOfTable = 255;
+	int lengthOfPattern = pattern.length();
+	int i;
+
+	for (i = 0; i <= lengthOfTable; i++)
+	{
+		table[i] = lengthOfPattern;
+	}
+
+	for (i = 0; i < lengthOfPattern - 1; i++)
+	{
+		table[pattern[i]] = lengthOfPattern - 1 - i;
+	}
+}
+
+void HorspoolMatching() {
+	string pattern, text;
+	int i, k, l, sayac=0,m=0;
+
+	cout << " Write the pattern: ";
+	cin >> pattern;
+
+	ShiftTable(pattern);
+
+	const auto start = clock();
+	ifstream txt("the_truman_show_script.txt");
+	if (txt.is_open()) {
+
+		cout << "Patterns was founded at ";
+		while (getline(txt, text))
+		{
+			int length = text.length();
+			for (i = 0; i < length; i++) {
+				if (text[i] >= 'A' && text[i] <= 'Z')
+				{
+					text[i] += 32;
+				}
+			}
+
+
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			k = lengthOfPattern - 1;
+
+
+			while (k <= lengthOfText - 1)
+			{
+				l = 0;
+
+				sayac++;      // -> yanlış yerde olabilir asax ya...
+
+				if (k + 3 > lengthOfText)
+				{
+					break;
+				}
+
+				while ((l <= lengthOfPattern - 1) && (pattern[lengthOfPattern - 1 - l] == text[k - l + 3]))
+				{
+					l++;
+				}
+
+				if (l == lengthOfPattern)
+				{
+					++k;
+					m++;
+				}
+				else
+				{
+					k = k + table[text[k + 3]];
+				}
+			}
+		}
+	}
+	const auto end = clock();
+
+	cout << "\n" << pattern << " found " << m << " times" << endl;
+
+	cout << "\nNumber of Basic Operation is : " << sayac << endl;
+
+
+	cout << endl;
+	cout << "\nTime for Horspool String Matching Algorithm: " << (end - start) * 1000.0 / CLOCKS_PER_SEC << " ms\n" << endl;
+
+}
+
+void HorspoolMatchingWithString(string pattern) {
+	
+	string text;
+	int i, k, l, sayac = 0, m = 0;
+
+	ShiftTable(pattern);
+
+	const auto start = clock();
+	ifstream txt("the_truman_show_script.txt");
+	if (txt.is_open()) {
+
+		while (getline(txt, text))
+		{
+			int length = text.length();
+			for (i = 0; i < length; i++) {
+				if (text[i] >= 'A' && text[i] <= 'Z')
+				{
+					text[i] += 32;
+				}
+			}
+
+
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			k = lengthOfPattern - 1;
+
+
+			while (k <= lengthOfText - 1)
+			{
+				l = 0;
+
+				sayac++;      // -> yanlış yerde olabilir asax ya...
+
+				if (k + 3 > lengthOfText)
+				{
+					break;
+				}
+
+				while ((l <= lengthOfPattern - 1) && (pattern[lengthOfPattern - 1 - l] == text[k - l + 3]))
+				{
+					l++;
+				}
+
+				if (l == lengthOfPattern)
+				{
+					++k;
+					m++;
+				}
+				else
+				{
+					k = k + table[text[k + 3]];
+				}
+			}
+		}
+	}
+	const auto end = clock();
+
+	cout << "\n" << pattern << " found " << m << " times" << endl;
+
+	cout << "\nNumber of Basic Operation is : " << sayac << endl;
+
+
+	cout << endl;
+	cout << "\nTime for Horspool String Matching Algorithm: " << (end - start) * 1000.0 / CLOCKS_PER_SEC << " ms\n" << endl;
+
+}
+
+void HorspoolMatchingForRandom(string Str) {
+
+	string text;
+	string pattern = Str;
+	int i, k, l, sayac = 0, m = 0;
+	
+
+	ShiftTable(pattern);
+
+	const auto start = clock();
+	ifstream txt("the_truman_show_script.txt");
+	
+	
+	
+	
+	if (txt.is_open()) {
+
+		while (getline(txt, text))
+		{
+			int length = text.length();
+			for (i = 0; i < length; i++) {
+				if (text[i] >= 'A' && text[i] <= 'Z')
+				{
+					text[i] += 32;
+				}
+			}
+
+
+			int lengthOfPattern = pattern.length();
+			int lengthOfText = text.length();
+
+			k = lengthOfPattern - 1;
+
+
+			while (k <= lengthOfText - 1)
+			{
+				l = 0;
+
+				sayac++;      // -> yanlış yerde olabilir asax ya...
+
+				if (k + 3 > lengthOfText)
+				{
+					break;
+				}
+
+				while ((l <= lengthOfPattern - 1) && (pattern[lengthOfPattern - 1 - l] == text[k - l + 3]))
+				{
+					l++;
+				}
+
+				if (l == lengthOfPattern)
+				{
+					++k;
+					m++;
+				}
+				else
+				{
+					k = k + table[text[k + 3]];
+				}
+			}
+		}
+	}
+
+	const auto end = clock();
+	totalOperation1 = totalOperation + sayac;
+	totalTime1 = totalTime + ((end - start) * 1000.0 / CLOCKS_PER_SEC);
+	
+
+}
+
+char genRandom()
+{
+	return alphanum[rand() % stringLength];
+}
+
+int main()
+{
+	int deneme=0;
+	string pattern;
+	string Str;
+	int section;
+	int count = 0;
+
+	cout << "(1) Brute-Force String Matching" << endl;
+	cout << "(2) Horspool's String Matching" << endl;
+	cout << "(3) Compare Brute-Force and Horspool's String Matching Algorithms" << endl;
+	cout << "(4) Analyze the average-case efficiencies of Brute-Force and Horspool's Algorithms" << endl;
+	cout << "(0) Exit" << endl;
+
+	cin >> section;
+
+	switch (section)
+	{
+	case 1:
+
+		BruteForceSearch();
+		break;
+
+	case 2:
+
+		HorspoolMatching();
+		break;
+
+	case 3:
+
+		
+		cout << "Enter a pattern: " << endl;
+		cin >> pattern;
+		cout << "Brute Force:" << endl;
+		BruteForceSearchWithString(pattern);
+
+
+
+
+		cout << "Horspool : " << endl;
+		HorspoolMatchingWithString(pattern);
+
+		break;
+
+	case 4:
+
+		for (int i = 0; i < 100; i++) 
+		{
+			
+			for (int j = 0; j <= (rand() % 4 + 3); j++)
+			{
+
+				Str += genRandom();
+				
+			}
+
+			BruteForceSearchForRandom(Str);
+			HorspoolMatchingForRandom(Str);
+			Str = "";
+		}
+
+		cout << "\nNumber of Basic Operation for Brute-Force is : " << totalOperation << endl;
+		cout << "\nAverage Time For Brute-Force is: " << totalTime/1000 << " second" << endl;
+
+		
+
+		cout << "\nNumber of Basic Operation for Horspool is : " << totalOperation1 << endl;
+		cout << "\nAverage Time For Horspool is: " << totalTime1 / 1000 << " second" << endl;
+
+		break;
+
+	case 0:
+
+		cout << "Programdan Ciktiniz..." << endl;
+		EXIT_SUCCESS;
+		break;
+
+	default:
+		cout << "Yanlis deger girdiniz. Lutfen tekrar deneyiniz..." << endl;
+		break;
+	}
+
+
+
+}
